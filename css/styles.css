@@ -1,0 +1,15 @@
+/*Colores*/
+:root{
+    --primario: #11009E;
+    --secundario: #8696FE;
+    --azulElec: #4942E4;
+    --fondo: #C4B0FF;
+}
+
+body{
+    background-color: var(--fondo);
+}
+
+.custom-border {
+    border: 3px solid var(--secundario);
+}
