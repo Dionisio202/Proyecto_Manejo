@@ -13,3 +13,23 @@ body{
 .custom-border {
     border: 3px solid var(--secundario);
 }
+
+.boton {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: tomato;
+    color: white;
+    border: none;
+    font-size: 20px;
+   
+}
+
+.boton i {
+    font-size: 47px;
+    height: 30px;
+    color: black;
+    display: flex;
+            justify-content: center;
+            align-items: center;
+}
