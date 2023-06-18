@@ -1,7 +1,7 @@
 /*Colores*/
 :root{
     --primario: #11009E;
-    --secundario: #8696FE;
+    --secundario: #26272c;
     --azulElec: #4942E4;
     --fondo: #080d25;
 }
@@ -18,7 +18,7 @@ body{
     width: 65px;
     height: 65px;
     border-radius: 50%;
-    background-color: tomato;
+    background-color: rgb(44, 37, 51);
     color: white;
     border: none;
     font-size: 20px;
@@ -28,7 +28,7 @@ body{
 .boton i {
     font-size: 47px;
     height: 30px;
-    color: black;
+    color: rgb(46, 116, 130);
     display: flex;
             justify-content: center;
             align-items: center;
