@@ -3,11 +3,11 @@
     --primario: #11009E;
     --secundario: #8696FE;
     --azulElec: #4942E4;
-    --fondo: #C4B0FF;
+    --fondo: #080d25;
 }
 
 body{
-    background-color: var(--fondo);
+    background-image: linear-gradient(100deg, #575656, #062e3f);
 }
 
 .custom-border {
@@ -33,6 +33,15 @@ body{
             justify-content: center;
             align-items: center;
 }
-.card {
+.carta{
     margin: 15px;
+    
+}
+.carta i{
+   
+   
+    
+    display: flex;
+            justify-content: center;
+            align-items: center;
 }

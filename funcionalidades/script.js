@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
     descripcionTextarea.value = "";
 
     var nuevaTarjeta = document.createElement("div");
-    nuevaTarjeta.classList.add("card");
+    nuevaTarjeta.classList.add("carta");
 
     var nuevaTarjetaHTML = `
       <div class="card-body">
