@@ -44,4 +44,13 @@ document.addEventListener("DOMContentLoaded", function() {
     var bootstrapModal = bootstrap.Modal.getInstance(formularioModal);
     bootstrapModal.hide();
   });
+
+  var cartas = document.querySelectorAll('.carta');
+  cartas.forEach(function(carta) {
+    carta.addEventListener('click', function() {
+      var modal = document.getElementById('myModal');
+      var bootstrapModal = new bootstrap.Modal(modal);
+      bootstrapModal.show();
+    });
+  });
 });
