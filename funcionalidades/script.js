@@ -1,51 +1,164 @@
-document.addEventListener("DOMContentLoaded", function() {
-  var btnAgregar = document.getElementById("btnAgregar");
-  var formularioModal = document.getElementById("formularioModal");
+document.addEventListener("DOMContentLoaded", function () {
 
-  btnAgregar.addEventListener("click", function() {
+  console.log("DOM Cargado");
+
+  //ENCONTRAMOS EL BOTON PARA QUE APAREZCA EL FORMULARIO PARA AGREGAR UNA TAREA
+  const btnAgregar = document.getElementById("btnAgregar");
+
+  //ENCONTRAMOS EL FORMULARIO PARA AGREGAR UNA TAREA
+  const formularioModal = document.getElementById("formularioModal");
+
+  const formulario = document.getElementById("formulario1");
+  //ENCONTRAMOS EL CONTENEDOR DE LAS TARJETAS POR HACER
+  const contenedorTareasPorHacer = document.getElementById("contenedorTareasPorHacer");
+  //ENCONTRAMOS EL CONTENEDOR DE LAS TARJETAS EN PROCESO
+  const contenedorTareasEnProceso = document.getElementById("contenedorTareasEnProceso");
+  //ENCONTRAMOS EL CONTENEDOR DE LAS TARJETAS TERMINADAS
+  const contenedorTareasTerminadas = document.getElementById("contenedorTareasHechas");
+
+  //DEFINIMOS UNA VARIABLE QUE CONTENDRA LOS DATOS RECUPERADOS DEL ARCHIVO PHP
+  var Datos = [];
+
+  recuperarDatos();
+
+
+  //EVENTO QUE AL APLASTARLO MUESTRA EL FORMULARIO PARA AGREGAR UNA TAREA
+  btnAgregar.addEventListener("click", function () {
     var bootstrapModal = new bootstrap.Modal(formularioModal);
     bootstrapModal.show();
-  });
 
-  var formulario = document.getElementById("formulario");
-  var nombreTareaInput = document.getElementById("nombreTarea");
-  var fechaInicioInput = document.getElementById("fechaInicio");
-  var fechaFinalInput = document.getElementById("fechaFinal");
-  var descripcionTextarea = document.getElementById("descripcion");
-
-  formulario.addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    var nombreTarea = nombreTareaInput.value;
-    var fechaInicio = fechaInicioInput.value;
-    var fechaFinal = fechaFinalInput.value;
-    var descripcion = descripcionTextarea.value;
-
-    nombreTareaInput.value = "";
-    fechaInicioInput.value = "";
-    fechaFinalInput.value = "";
-    descripcionTextarea.value = "";
-
-    var nuevaTarjeta = crearTarea(nombreTarea);
-
-
-    var contenedorTarjetas = document.getElementById("contenedorTarjetas");
-    contenedorTarjetas.appendChild(nuevaTarjeta);
-
-    var bootstrapModal = bootstrap.Modal.getInstance(formularioModal);
-    bootstrapModal.hide();
+    mostrar();
   });
 
 
-  var cartas = document.querySelectorAll('.carta');
-cartas.forEach(function(carta) {
-  console.log("asdasdddddddddd");
-  carta.addEventListener('click', function() {
-    // Obtener datos de la carta seleccionada
-    var titulo = carta.querySelector('.titulo').textContent;
-    console.log("asdasdddddddddd");
 
-    // Crear el elemento modal dinámicamente
+  //METODO PARA RECUPERAR LOS DATOS DEL ARCHIVO PHP
+  function recuperarDatos() {
+    axios.get('../Conexion/RecibirDatos.php')
+      .then(response => {
+        var datos = response.data;
+        UbicarTareas(datos);
+      })
+      .catch(error => console.log(error + " AQUI ES EL ERROR"));
+  }
+
+
+  //METODO PARA UBICAR LAS TAREAS DENTRO DEL CONTENEDOR. ADEMÁS, GUARDAMOS LAS TAREAS 
+  //EN LA VARIABLE DATOS PARA TENER ACCESO MÁS ADELANTE
+  function UbicarTareas(datos) {
+
+    reiniciarDatos();
+
+    Datos = datos;
+    datos.forEach(element => {
+      var nuevaTarjeta = crearTarea(element.ID_TAREA, element.NOM_TAREA);
+
+      nuevaTarjeta.addEventListener('click', function () {
+
+        var id = this.id;
+        console.log(id);
+
+        mostrarInformacionTarea(element.NOM_TAREA, element.DESCRIPCION)
+
+      });
+      var botonCambiar = nuevaTarjeta.querySelector(".pasarEnProceso");
+
+
+      botonCambiar.addEventListener("click", function () {
+
+        event.stopPropagation();
+        console.log("Botón presionado en la tarea con ID: " + nuevaTarjeta.id);
+        var id = nuevaTarjeta.id.split("-")[1];
+
+        moverTarea(element.ESTADO,id)
+        
+        //window.location.reload();
+        recuperarDatos();
+      });
+
+
+      var botonBorrar = nuevaTarjeta.querySelector(".borrar ");
+
+      botonBorrar.addEventListener("click", function () {
+
+        event.stopPropagation();
+
+        confirmAction(function(option) {
+          if (option) {
+
+            var id = nuevaTarjeta.id.split("-")[1];
+
+            //METODO QUE BORRA LA TAREA
+            borrarTarea(id);
+
+          recuperarDatos();  
+        //window.location.reload();
+
+          } else {
+            console.log('El usuario canceló');
+          }
+        });
+
+      });
+
+      console.log(element.ID_TAREA+""+element.ESTADO);
+
+      ubicacionTarea(element.ESTADO).appendChild(nuevaTarjeta);
+
+      if(element.ESTADO == 'HEC'){
+
+        botonCambiar.style.display = "none";
+      }
+
+    });
+  }
+
+  //ESCOJE EL CONTENEDOR DEPENDIENDO EL ESTADO DE LA TAREA
+  function ubicacionTarea(estado){
+
+    if(estado == 'PHA'){
+      return contenedorTareasPorHacer;
+    }
+    else if(estado == 'EPR'){
+      return contenedorTareasEnProceso;
+    }
+    else if(estado == 'HEC'){
+      return contenedorTareasTerminadas;
+    }
+    return null;
+  }
+
+
+  //METODO PARA CREAR LAS TAREAS 
+  function crearTarea(id, nombreTarea) {
+
+    var nuevaTarjetaCont = document.createElement("div");
+    nuevaTarjetaCont.classList.add("card", "carta");
+    nuevaTarjetaCont.setAttribute("id", "Tarea-" + id);
+
+    nuevaTarjetaCont.innerHTML = ` 
+  <div class="card-header d-flex justify-content-between align-items-center">
+  <h3 class="card-title small">`+ nombreTarea + `</h3>
+  <div class="card-icons">
+  <div class="d-flex">
+  <button class="btn btn-success mr-2 rounded-circle pasarEnProceso">
+  <span><i class="bi bi-check"></i></span>
+  </button>
+  <button class="btn btn-danger rounded-circle ms-2 borrar">
+  <span><i class="bi bi-trash"></i></span>
+  </button>
+  </div>
+  </div>
+  </div>
+  `;
+
+    return nuevaTarjetaCont;
+  }
+
+
+  //METODO PARA MOSTRAR LA INFORMACIÓN DE LA TAREA
+  function mostrarInformacionTarea(titulo, descripcion) {
+
     var modal = document.createElement('div');
     modal.className = 'modal';
     modal.innerHTML = `
@@ -68,34 +181,108 @@ cartas.forEach(function(carta) {
     // Mostrar el modal utilizando Bootstrap
     var bootstrapModal = new bootstrap.Modal(modal);
     bootstrapModal.show();
-  });
-});
+  }
+
+  //BORRAR TAREA 
+  function borrarTarea(id) {
+
+    const url = '../Conexion/BorrarTarea.php';
+    var data = { id: id};
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.text())
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+
+
+  //MOVER TAREA 
+  function moverTarea(estadoAnterior, id) {
+
+    var estado = '';
+
+    if(estadoAnterior == 'PHA'){
+      estado = 'EPR';
+    }
+    else if(estadoAnterior == 'EPR'){
+      estado = 'HEC';
+    }else{
+      return;
+    }
+
+    const url = '../Conexion/ActualizarEstado.php';
+    var data = { id: id, estado: estado};
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.text())
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  //VENTANA EMERGENTE 
+
+  var confirmDialog = document.getElementById('confirm-dialog');
+  var confirmButton = document.getElementById('confirm-button');
+  var cancelButton = document.getElementById('cancel-button');
+  
+  function confirmAction(callback) {
+    confirmDialog.style.display = 'block';
+  
+    function handleConfirm() {
+      confirmDialog.style.display = 'none';
+      callback(true); // El usuario ha elegido "Aceptar"
+    }
+  
+    function handleCancel() {
+      confirmDialog.style.display = 'none';
+      callback(false); // El usuario ha elegido "Cancelar"
+    }
+  
+    confirmButton.addEventListener('click', handleConfirm);
+    cancelButton.addEventListener('click', handleCancel);
+  }
+
+
+  function reiniciarDatos(){
+
+    contenedorTareasTerminadas.innerHTML = '';
+    contenedorTareasEnProceso.innerHTML = '';
+    contenedorTareasPorHacer.innerHTML = '';
+
+  }
+
+
+
+
+
+
+  function mostrar() {
+    Datos.forEach(element => {
+      console.log(element.NOM_TAREA);
+    });
+    console.log(Datos + "   Soy DATOS");
+  }
+
 
 });
-
-
-
-
-function crearTarea(nombreTarea){
-
-  var nuevaTarjetaCont = document.createElement("div");
-  nuevaTarjetaCont.classList.add("card", "carta");
-
-  nuevaTarjetaCont.innerHTML =  ` 
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h3 class="card-title small">Título de la tarea</h3>
-    <div class="card-icons">
-      <div class="d-flex">
-        <button class="btn btn-success mr-2 rounded-circle">
-          <span><i class="bi bi-check"></i></span>
-        </button>
-        <button class="btn btn-danger rounded-circle ms-2">
-          <span><i class="bi bi-trash"></i></span>
-        </button>
-      </div>
-    </div>
-  </div>
-`;
-
-  return nuevaTarjetaCont;
-}
