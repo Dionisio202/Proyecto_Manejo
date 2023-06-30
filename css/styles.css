@@ -37,6 +37,7 @@ body{
     margin: 15px;
     
 }
+
 .carta i{
    
    
@@ -45,3 +46,6 @@ body{
             justify-content: center;
             align-items: center;
 }
+
+
+.pasarEnProceso{}
