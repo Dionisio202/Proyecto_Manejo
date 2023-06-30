@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+  console.log("DOM Cargado");
 
   //ENCONTRAMOS EL BOTON PARA QUE APAREZCA EL FORMULARIO PARA AGREGAR UNA TAREA
   const btnAgregar = document.getElementById("btnAgregar");
@@ -46,6 +47,8 @@ document.addEventListener("DOMContentLoaded", function () {
   //EN LA VARIABLE DATOS PARA TENER ACCESO MÁS ADELANTE
   function UbicarTareas(datos) {
 
+    reiniciarDatos();
+
     Datos = datos;
     datos.forEach(element => {
       var nuevaTarjeta = crearTarea(element.ID_TAREA, element.NOM_TAREA);
@@ -65,7 +68,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         event.stopPropagation();
         console.log("Botón presionado en la tarea con ID: " + nuevaTarjeta.id);
+        var id = nuevaTarjeta.id.split("-")[1];
+
+        moverTarea(element.ESTADO,id)
         
+        //window.location.reload();
+        recuperarDatos();
       });
 
 
@@ -77,12 +85,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         confirmAction(function(option) {
           if (option) {
+
             var id = nuevaTarjeta.id.split("-")[1];
 
             //METODO QUE BORRA LA TAREA
             borrarTarea(id);
-            
-            window.location.href = '../index.html';
+
+          recuperarDatos();  
+        //window.location.reload();
 
           } else {
             console.log('El usuario canceló');
@@ -91,14 +101,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
       });
 
+      console.log(element.ID_TAREA+""+element.ESTADO);
 
+      ubicacionTarea(element.ESTADO).appendChild(nuevaTarjeta);
 
+      if(element.ESTADO == 'HEC'){
 
+        botonCambiar.style.display = "none";
+      }
 
-
-
-      contenedorTareasPorHacer.appendChild(nuevaTarjeta);
     });
+  }
+
+  //ESCOJE EL CONTENEDOR DEPENDIENDO EL ESTADO DE LA TAREA
+  function ubicacionTarea(estado){
+
+    if(estado == 'PHA'){
+      return contenedorTareasPorHacer;
+    }
+    else if(estado == 'EPR'){
+      return contenedorTareasEnProceso;
+    }
+    else if(estado == 'HEC'){
+      return contenedorTareasTerminadas;
+    }
+    return null;
   }
 
 
@@ -178,6 +205,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+
+
   //MOVER TAREA 
   function moverTarea(estadoAnterior, id) {
 
@@ -192,9 +221,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-
-    const url = '../Conexion/BorrarTarea.php';
-    var data = { id: id, estado: estadoAnterior};
+    const url = '../Conexion/ActualizarEstado.php';
+    var data = { id: id, estado: estado};
 
     fetch(url, {
       method: 'POST',
@@ -214,22 +242,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //VENTANA EMERGENTE 
 
- 
-
-    const ventanaEmergente = `<div id="confirm-dialog">
-    <div class="message">¿Estás seguro?</div>
-    <button id="confirm-button" class=" buttonAlert ">Aceptar</button>
-    <button id="cancel-button" class=" buttonAlert ">Cancelar</button>
-  </div>`
-
-  
-    // JavaScript
   var confirmDialog = document.getElementById('confirm-dialog');
   var confirmButton = document.getElementById('confirm-button');
   var cancelButton = document.getElementById('cancel-button');
   
-
-
   function confirmAction(callback) {
     confirmDialog.style.display = 'block';
   
@@ -247,6 +263,14 @@ document.addEventListener("DOMContentLoaded", function () {
     cancelButton.addEventListener('click', handleCancel);
   }
 
+
+  function reiniciarDatos(){
+
+    contenedorTareasTerminadas.innerHTML = '';
+    contenedorTareasEnProceso.innerHTML = '';
+    contenedorTareasPorHacer.innerHTML = '';
+
+  }
 
 
 
