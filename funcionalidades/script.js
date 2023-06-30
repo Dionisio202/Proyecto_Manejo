@@ -55,20 +55,49 @@ document.addEventListener("DOMContentLoaded", function () {
         var id = this.id;
         console.log(id);
 
-      });
-      var boton = nuevaTarjeta.querySelector(".pasarEnProceso");
+        mostrarInformacionTarea(element.NOM_TAREA, element.DESCRIPCION)
 
-      boton.addEventListener("click", function () {
-
-      event.stopPropagation();
-      console.log("Botón presionado en la tarea con ID: " + nuevaTarjeta.id);
-      
       });
+      var botonCambiar = nuevaTarjeta.querySelector(".pasarEnProceso");
+
+
+      botonCambiar.addEventListener("click", function () {
+
+        event.stopPropagation();
+        console.log("Botón presionado en la tarea con ID: " + nuevaTarjeta.id);
+        
+      });
+
+
+      var botonBorrar = nuevaTarjeta.querySelector(".borrar ");
+
+      botonBorrar.addEventListener("click", function () {
+
+        event.stopPropagation();
+
+        confirmAction(function(option) {
+          if (option) {
+            var id = nuevaTarjeta.id.split("-")[1];
+
+            //METODO QUE BORRA LA TAREA
+            borrarTarea(id);
+            
+            window.location.href = '../index.html';
+
+          } else {
+            console.log('El usuario canceló');
+          }
+        });
+
+      });
+
+
+
+
+
+
 
       contenedorTareasPorHacer.appendChild(nuevaTarjeta);
-
-
-
     });
   }
 
@@ -88,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <button class="btn btn-success mr-2 rounded-circle pasarEnProceso">
   <span><i class="bi bi-check"></i></span>
   </button>
-  <button class="btn btn-danger rounded-circle ms-2">
+  <button class="btn btn-danger rounded-circle ms-2 borrar">
   <span><i class="bi bi-trash"></i></span>
   </button>
   </div>
@@ -101,17 +130,123 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   //METODO PARA MOSTRAR LA INFORMACIÓN DE LA TAREA
-  var idTarea = document.querySelectorAll(".pasarEnProceso");
-  console.log(idTarea.length);
-  idTarea.forEach(function (carta) {
+  function mostrarInformacionTarea(titulo, descripcion) {
 
-    carta.addEventListener('click', function () {
+    var modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">${titulo}</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>${descripcion}</p>
+          </div>
+        </div>
+      </div>
+    `;
 
-      var id = this.id;
-      console.log(id);
+    // Agregar el modal al documento
+    document.body.appendChild(modal);
 
-    });
-  });
+    // Mostrar el modal utilizando Bootstrap
+    var bootstrapModal = new bootstrap.Modal(modal);
+    bootstrapModal.show();
+  }
+
+  //BORRAR TAREA 
+  function borrarTarea(id) {
+
+    const url = '../Conexion/BorrarTarea.php';
+    var data = { id: id};
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.text())
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  //MOVER TAREA 
+  function moverTarea(estadoAnterior, id) {
+
+    var estado = '';
+
+    if(estadoAnterior == 'PHA'){
+      estado = 'EPR';
+    }
+    else if(estadoAnterior == 'EPR'){
+      estado = 'HEC';
+    }else{
+      return;
+    }
+
+
+    const url = '../Conexion/BorrarTarea.php';
+    var data = { id: id, estado: estadoAnterior};
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.text())
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  //VENTANA EMERGENTE 
+
+ 
+
+    const ventanaEmergente = `<div id="confirm-dialog">
+    <div class="message">¿Estás seguro?</div>
+    <button id="confirm-button" class=" buttonAlert ">Aceptar</button>
+    <button id="cancel-button" class=" buttonAlert ">Cancelar</button>
+  </div>`
+
+  
+    // JavaScript
+  var confirmDialog = document.getElementById('confirm-dialog');
+  var confirmButton = document.getElementById('confirm-button');
+  var cancelButton = document.getElementById('cancel-button');
+  
+
+
+  function confirmAction(callback) {
+    confirmDialog.style.display = 'block';
+  
+    function handleConfirm() {
+      confirmDialog.style.display = 'none';
+      callback(true); // El usuario ha elegido "Aceptar"
+    }
+  
+    function handleCancel() {
+      confirmDialog.style.display = 'none';
+      callback(false); // El usuario ha elegido "Cancelar"
+    }
+  
+    confirmButton.addEventListener('click', handleConfirm);
+    cancelButton.addEventListener('click', handleCancel);
+  }
+
 
 
 
