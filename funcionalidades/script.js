@@ -8,13 +8,18 @@ document.addEventListener("DOMContentLoaded", function () {
   //ENCONTRAMOS EL FORMULARIO PARA AGREGAR UNA TAREA
   const formularioModal = document.getElementById("formularioModal");
 
-  const formulario = document.getElementById("formulario1");
   //ENCONTRAMOS EL CONTENEDOR DE LAS TARJETAS POR HACER
   const contenedorTareasPorHacer = document.getElementById("contenedorTareasPorHacer");
   //ENCONTRAMOS EL CONTENEDOR DE LAS TARJETAS EN PROCESO
   const contenedorTareasEnProceso = document.getElementById("contenedorTareasEnProceso");
   //ENCONTRAMOS EL CONTENEDOR DE LAS TARJETAS TERMINADAS
   const contenedorTareasTerminadas = document.getElementById("contenedorTareasHechas");
+
+  //ENCONTRAMOS LA VENTANA EMERGENTE Y LOS BOTONES DE CONFIRMAR Y CANCELAR
+  const confirmDialog = document.getElementById('confirm-dialog');
+  const confirmButton = document.getElementById('confirm-button');
+  const cancelButton = document.getElementById('cancel-button');
+  
 
   //DEFINIMOS UNA VARIABLE QUE CONTENDRA LOS DATOS RECUPERADOS DEL ARCHIVO PHP
   var Datos = [];
@@ -58,9 +63,16 @@ document.addEventListener("DOMContentLoaded", function () {
         var id = this.id;
         console.log(id);
 
-        mostrarInformacionTarea(element.NOM_TAREA, element.DESCRIPCION)
+        mostrarInformacionTarea(element.ID_TAREA,element.NOM_TAREA, element.DESCRIPCION, element.FEC_INI, element.FEC_FIN);
+        
+        var botonEditar = document.getElementById("editarTarea");
+
+        habilitarActualizacion(botonEditar);
+      
 
       });
+
+
       var botonCambiar = nuevaTarjeta.querySelector(".pasarEnProceso");
 
 
@@ -113,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  //ESCOJE EL CONTENEDOR DEPENDIENDO EL ESTADO DE LA TAREA
+  //ESCOGE EL CONTENEDOR DEPENDIENDO EL ESTADO DE LA TAREA
   function ubicacionTarea(estado){
 
     if(estado == 'PHA'){
@@ -157,23 +169,66 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   //METODO PARA MOSTRAR LA INFORMACIÓN DE LA TAREA
-  function mostrarInformacionTarea(titulo, descripcion) {
+  function mostrarInformacionTarea(id,titulo, descripcion, fechaInicio, fechaFin) {
 
     var modal = document.createElement('div');
     modal.className = 'modal';
     modal.innerHTML = `
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">${titulo}</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>${descripcion}</p>
-          </div>
-        </div>
-      </div>
+    <div class="" id="formularioActualizar" tabindex="-1" aria-labelledby="formularioModalLabel"
+    aria-hidden="true">
+   <div class="modal-dialog">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title " id="formularioModalLabel">Tareas</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body">
+               <form method="POST" action="../Conexion/ActualizarDatos.php" id="formulario">
+                   <div class="mb-3">
+                       <label for="nombreTarea" class="form-label">Nombre de Tarea:</label>
+                       <input type="text" class="form-control bloqueado" id="nombreTarea2" name="nombreTarea" value = "${titulo}" readOnly>
+                   </div>
+                   <div class="mb-3">
+                       <label for="fechaInicio" class="form-label">Fecha de Inicio:</label>
+                       <input type="date" class="form-control bloqueado" id="fechaInicio2" name="fechaInicio"  value = "${fechaInicio}" readOnly>
+                   </div>
+                   <div class="mb-3">
+                       <label for="fechaFinal" class="form-label">Fecha Final:</label>
+                       <input type="date" class="form-control bloqueado" id="fechaFinal2" name="fechaFinal" value = "${fechaFin}" readOnly>
+                   </div>
+
+                   <div class="mb-3">
+                       <label for="fechaFinal" class="form-label">Estado</label>
+                    
+                       <select name="estado" class="form-select" aria-label="Default select example" required>
+                          <option selected disable>Seleccionar estado</option>
+                          <option value="PHA" >Por hacer</option>
+                          <option value="EPR" >En proceso</option>
+                          <option value="HEC" >Hechas</option>
+                        </select>
+                    </div>
+
+
+                   <div class="mb-3">
+                       <label for="descripcion" class="form-label">Descripción:</label>
+                       <textarea class="form-control bloqueado" id="descripcion2" name="descripcion"  readOnly>${descripcion}</textarea>
+                       <input type="text"  id="idTarea" name="idTarea" value = "${id}" style="display:none;">
+                   </div>
+
+                   <div class= "button-container">
+                   <button type="button" class="btn btn-primary" id="editarTarea" >Editar</button>
+
+                   <button type="submit" class="btn btn-primary" style="display: none;" id= "guardarTarea">Guardar</button>
+                                      
+                   </div>
+               </form>
+           </div>
+       </div>
+   </div>
+</div>
     `;
+
+    
 
     // Agregar el modal al documento
     document.body.appendChild(modal);
@@ -182,6 +237,42 @@ document.addEventListener("DOMContentLoaded", function () {
     var bootstrapModal = new bootstrap.Modal(modal);
     bootstrapModal.show();
   }
+
+  //METODO PARA HABILITAR LA ACTUALIZACION DE LA TAREA
+  function habilitarActualizacion(botonEditar) {
+
+    botonEditar.addEventListener("click", function () {
+      console.log("se presiono el boton editar")
+
+      this.style.display = "none";
+
+      var botonGuardar = document.getElementById("guardarTarea");
+      botonGuardar.style.display = "block";
+
+      var titulo = document.getElementById("nombreTarea2");
+      titulo.classList.remove("bloqueado")
+      titulo.readOnly =false;
+      titulo.required = true;
+
+      var fechaInicio = document.getElementById("fechaInicio2");
+      fechaInicio.classList.remove("bloqueado")
+      fechaInicio.readOnly =false;
+      fechaInicio.required = true;
+
+      var fechaFin = document.getElementById("fechaFinal2");
+      fechaFin.classList.remove("bloqueado")
+      fechaFin.readOnly =false;
+      fechaFin.required = true;
+
+      var descripcion = document.getElementById("descripcion2");
+      descripcion.classList.remove("bloqueado")
+      descripcion.readOnly =false;
+      descripcion.required = true;
+
+    });
+
+  }
+
 
   //BORRAR TAREA 
   function borrarTarea(id) {
@@ -204,7 +295,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error('Error:', error);
       });
   }
-
 
 
   //MOVER TAREA 
@@ -240,12 +330,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  //VENTANA EMERGENTE 
 
-  var confirmDialog = document.getElementById('confirm-dialog');
-  var confirmButton = document.getElementById('confirm-button');
-  var cancelButton = document.getElementById('cancel-button');
-  
+  //VENTANA EMERGENTE 
   function confirmAction(callback) {
     confirmDialog.style.display = 'block';
   
@@ -271,9 +357,6 @@ document.addEventListener("DOMContentLoaded", function () {
     contenedorTareasPorHacer.innerHTML = '';
 
   }
-
-
-
 
 
 

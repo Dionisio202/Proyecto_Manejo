@@ -74,3 +74,28 @@ body{
   .buttonAlert {
     margin-right: 10px;
   }
+
+
+  .bloqueado{
+
+    background-color: white;
+    pointer-events: none;
+    cursor: default;
+
+
+}
+
+.bloqueado:focus{
+
+    background-color: white;
+    pointer-events: none;
+    cursor: default;
+ 
+
+}
+
+.button-container {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+  }
