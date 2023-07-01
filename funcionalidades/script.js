@@ -154,6 +154,10 @@ document.addEventListener("DOMContentLoaded", function () {
   //METODO PARA CREAR LAS TAREAS 
   function crearTarea(id, nombreTarea) {
 
+    if(nombreTarea.length > 22){
+      nombreTarea = nombreTarea.substring(0,22)+"...";
+    }
+
     var nuevaTarjetaCont = document.createElement("div");
     nuevaTarjetaCont.classList.add("card", "carta");
     nuevaTarjetaCont.setAttribute("id", "Tarea-" + id);
