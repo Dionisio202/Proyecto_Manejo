@@ -68,6 +68,16 @@ document.addEventListener("DOMContentLoaded", function () {
         var botonEditar = document.getElementById("editarTarea");
 
         habilitarActualizacion(botonEditar);
+
+        var botonCerrar = document.getElementById("cerrar");
+
+        botonCerrar.addEventListener("click", function () {
+
+          var modal = document.getElementById("formularioActualizar");
+          modal.remove();
+
+
+        });
       
 
       });
@@ -144,6 +154,10 @@ document.addEventListener("DOMContentLoaded", function () {
   //METODO PARA CREAR LAS TAREAS 
   function crearTarea(id, nombreTarea) {
 
+    if(nombreTarea.length > 22){
+      nombreTarea = nombreTarea.substring(0,22)+"...";
+    }
+
     var nuevaTarjetaCont = document.createElement("div");
     nuevaTarjetaCont.classList.add("card", "carta");
     nuevaTarjetaCont.setAttribute("id", "Tarea-" + id);
@@ -173,14 +187,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var modal = document.createElement('div');
     modal.className = 'modal';
+    modal.id = 'formularioActualizar';
     modal.innerHTML = `
-    <div class="" id="formularioActualizar" tabindex="-1" aria-labelledby="formularioModalLabel"
+    <div class=""  tabindex="-1" aria-labelledby="formularioModalLabel"
     aria-hidden="true">
    <div class="modal-dialog">
        <div class="modal-content">
            <div class="modal-header">
                <h5 class="modal-title " id="formularioModalLabel">Tareas</h5>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="cerrar"></button>
            </div>
            <div class="modal-body">
                <form method="POST" action="../Conexion/ActualizarDatos.php" id="formulario">
@@ -201,7 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
                        <label for="fechaFinal" class="form-label">Estado</label>
                     
                        <select name="estado" class="form-select" aria-label="Default select example" required>
-                          <option selected disable>Seleccionar estado</option>
                           <option value="PHA" >Por hacer</option>
                           <option value="EPR" >En proceso</option>
                           <option value="HEC" >Hechas</option>
