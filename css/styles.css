@@ -38,13 +38,11 @@ body{
     
 }
 
-.carta i{
-   
-   
-    
+.carta i{ 
     display: flex;
             justify-content: center;
             align-items: center;
+            
 }
 
 

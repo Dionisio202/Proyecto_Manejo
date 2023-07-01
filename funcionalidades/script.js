@@ -85,19 +85,25 @@ document.addEventListener("DOMContentLoaded", function () {
         botonEliminar.addEventListener("click", function () {
     
           confirmDialog.style.display = 'block';
+          
           confirmAction(function(option) {
+
             if (option) {
     
               var id = nuevaTarjeta.id.split("-")[1];
+
+              console.log("ID DE LA TAREA A ELIMINAR: "+id);
     
               //METODO QUE BORRA LA TAREA
               borrarTarea(id);
       
-          window.location.reload();
+
+          console.log("ENTRE AL BOTON")
     
             } else {
               console.log('El usuario canceló');
-              option = null;
+              event.stopPropagation();
+
             }
           });
     
@@ -234,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                    <button type="submit" class="btn btn-primary" style="display: none;" id= "guardarTarea">Guardar</button>
 
-                   <button type="button" class="btn btn-danger" id="eliminarTarea" >Eliminar</button>
+                   <button type="button" class="btn btn-danger" id="eliminarTarea" style="margin-left: 10px;" >Eliminar</button>
 
                    </div>
                </form>
