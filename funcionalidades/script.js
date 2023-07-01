@@ -60,14 +60,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
       nuevaTarjeta.addEventListener('click', function () {
 
-        var id = this.id;
-        console.log(id);
 
         mostrarInformacionTarea(element.ID_TAREA,element.NOM_TAREA, element.DESCRIPCION, element.FEC_INI, element.FEC_FIN);
         
+
+
         var botonEditar = document.getElementById("editarTarea");
 
         habilitarActualizacion(botonEditar);
+
+        var botonEliminar = document.getElementById("eliminarTarea");
+
+        botonEliminar.addEventListener("click", function () {
+    
+          confirmDialog.style.display = 'block';
+          confirmAction(function(option) {
+            if (option) {
+    
+              var id = nuevaTarjeta.id.split("-")[1];
+    
+              //METODO QUE BORRA LA TAREA
+              borrarTarea(id);
+      
+          window.location.reload();
+    
+            } else {
+              console.log('El usuario canceló');
+              option = null;
+            }
+          });
+    
+        });
       
 
       });
@@ -89,31 +112,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
 
-      var botonBorrar = nuevaTarjeta.querySelector(".borrar ");
 
-      botonBorrar.addEventListener("click", function () {
-
-        event.stopPropagation();
-
-        confirmAction(function(option) {
-          if (option) {
-
-            var id = nuevaTarjeta.id.split("-")[1];
-
-            //METODO QUE BORRA LA TAREA
-            borrarTarea(id);
-
-          recuperarDatos();  
-        //window.location.reload();
-
-          } else {
-            console.log('El usuario canceló');
-          }
-        });
-
-      });
-
-      console.log(element.ID_TAREA+""+element.ESTADO);
+      console.log(element.ID_TAREA+" "+element.ESTADO);
 
       ubicacionTarea(element.ESTADO).appendChild(nuevaTarjeta);
 
@@ -144,6 +144,9 @@ document.addEventListener("DOMContentLoaded", function () {
   //METODO PARA CREAR LAS TAREAS 
   function crearTarea(id, nombreTarea) {
 
+    if(nombreTarea.length > 22){
+      nombreTarea = nombreTarea.substring(0,22)+"...";
+    }
     var nuevaTarjetaCont = document.createElement("div");
     nuevaTarjetaCont.classList.add("card", "carta");
     nuevaTarjetaCont.setAttribute("id", "Tarea-" + id);
@@ -155,9 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="d-flex">
   <button class="btn btn-success mr-2 rounded-circle pasarEnProceso">
   <span><i class="bi bi-check"></i></span>
-  </button>
-  <button class="btn btn-danger rounded-circle ms-2 borrar">
-  <span><i class="bi bi-trash"></i></span>
   </button>
   </div>
   </div>
@@ -171,8 +171,10 @@ document.addEventListener("DOMContentLoaded", function () {
   //METODO PARA MOSTRAR LA INFORMACIÓN DE LA TAREA
   function mostrarInformacionTarea(id,titulo, descripcion, fechaInicio, fechaFin) {
 
+
     var modal = document.createElement('div');
     modal.className = 'modal';
+    modal.style.zIndex = '10000';
     modal.innerHTML = `
     <div class="" id="formularioActualizar" tabindex="-1" aria-labelledby="formularioModalLabel"
     aria-hidden="true">
@@ -201,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function () {
                        <label for="fechaFinal" class="form-label">Estado</label>
                     
                        <select name="estado" class="form-select" aria-label="Default select example" required>
-                          <option selected disable>Seleccionar estado</option>
                           <option value="PHA" >Por hacer</option>
                           <option value="EPR" >En proceso</option>
                           <option value="HEC" >Hechas</option>
@@ -219,7 +220,9 @@ document.addEventListener("DOMContentLoaded", function () {
                    <button type="button" class="btn btn-primary" id="editarTarea" >Editar</button>
 
                    <button type="submit" class="btn btn-primary" style="display: none;" id= "guardarTarea">Guardar</button>
-                                      
+
+                   <button type="button" class="btn btn-danger" id="eliminarTarea" >Eliminar</button>
+
                    </div>
                </form>
            </div>
@@ -238,6 +241,8 @@ document.addEventListener("DOMContentLoaded", function () {
     bootstrapModal.show();
   }
 
+  
+  
   //METODO PARA HABILITAR LA ACTUALIZACION DE LA TAREA
   function habilitarActualizacion(botonEditar) {
 
@@ -333,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //VENTANA EMERGENTE 
   function confirmAction(callback) {
-    confirmDialog.style.display = 'block';
+
   
     function handleConfirm() {
       confirmDialog.style.display = 'none';
