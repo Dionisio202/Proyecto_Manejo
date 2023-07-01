@@ -69,6 +69,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         habilitarActualizacion(botonEditar);
 
+        var botonCerrar = document.getElementById("cerrar");
+
+        botonCerrar.addEventListener("click", function () {
+
+          var modal = document.getElementById("formularioActualizar");
+          modal.remove();
+
+
+        });
+      
+
         var botonEliminar = document.getElementById("eliminarTarea");
 
         botonEliminar.addEventListener("click", function () {
@@ -147,6 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if(nombreTarea.length > 22){
       nombreTarea = nombreTarea.substring(0,22)+"...";
     }
+
     var nuevaTarjetaCont = document.createElement("div");
     nuevaTarjetaCont.classList.add("card", "carta");
     nuevaTarjetaCont.setAttribute("id", "Tarea-" + id);
@@ -174,15 +186,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var modal = document.createElement('div');
     modal.className = 'modal';
+    modal.id = 'formularioActualizar';
     modal.style.zIndex = '10000';
     modal.innerHTML = `
-    <div class="" id="formularioActualizar" tabindex="-1" aria-labelledby="formularioModalLabel"
+    <div class=""  tabindex="-1" aria-labelledby="formularioModalLabel"
     aria-hidden="true">
    <div class="modal-dialog">
        <div class="modal-content">
            <div class="modal-header">
                <h5 class="modal-title " id="formularioModalLabel">Tareas</h5>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="cerrar"></button>
            </div>
            <div class="modal-body">
                <form method="POST" action="../Conexion/ActualizarDatos.php" id="formulario">
@@ -240,7 +253,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var bootstrapModal = new bootstrap.Modal(modal);
     bootstrapModal.show();
   }
-
   
   
   //METODO PARA HABILITAR LA ACTUALIZACION DE LA TAREA
