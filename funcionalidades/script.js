@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //METODO PARA RECUPERAR LOS DATOS DEL ARCHIVO PHP
   function recuperarDatos() {
-    axios.get('../Conexion/RecibirDatos.php')
+    axios.get('../Proyecto_Manejo/Conexion/RecibirDatos.php')
       .then(response => {
         var datos = response.data;
         UbicarTareas(datos);
@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="card-icons">
   <div class="d-flex" id="botones${id}">
   <button type="button" class="btn btn-info  btn-circle btn-lg pasarEnProceso">
-  <i class="bi bi-chevron-double-right"></i></i>
+  <i class="bi bi-arrow-right icon-arrow"></i></i>
   </button>
   </div>
   </div>

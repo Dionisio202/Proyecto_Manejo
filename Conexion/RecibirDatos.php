@@ -11,7 +11,7 @@ try {
     $resultados = array();
     while ($fila = $statement->fetch(PDO::FETCH_ASSOC)) {
         $resultados[] = $fila;
-    }
+    }   
     $datosJson = json_encode($resultados);
     echo $datosJson;
     exit();
