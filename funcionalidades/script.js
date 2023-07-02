@@ -16,10 +16,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const contenedorTareasTerminadas = document.getElementById("contenedorTareasHechas");
 
   //ENCONTRAMOS LA VENTANA EMERGENTE Y LOS BOTONES DE CONFIRMAR Y CANCELAR
+  const over = document.getElementById('over');
   const confirmDialog = document.getElementById('confirm-dialog');
   const confirmButton = document.getElementById('confirm-button');
   const cancelButton = document.getElementById('cancel-button');
-  
+
+
 
   //DEFINIMOS UNA VARIABLE QUE CONTENDRA LOS DATOS RECUPERADOS DEL ARCHIVO PHP
   var Datos = [];
@@ -48,6 +50,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 
+
+
+
   //METODO PARA UBICAR LAS TAREAS DENTRO DEL CONTENEDOR. ADEMÁS, GUARDAMOS LAS TAREAS 
   //EN LA VARIABLE DATOS PARA TENER ACCESO MÁS ADELANTE
   function UbicarTareas(datos) {
@@ -55,14 +60,17 @@ document.addEventListener("DOMContentLoaded", function () {
     reiniciarDatos();
 
     Datos = datos;
+
     datos.forEach(element => {
+
+
       var nuevaTarjeta = crearTarea(element.ID_TAREA, element.NOM_TAREA);
 
       nuevaTarjeta.addEventListener('click', function () {
 
 
-        mostrarInformacionTarea(element.ID_TAREA,element.NOM_TAREA, element.DESCRIPCION, element.FEC_INI, element.FEC_FIN);
-        
+        mostrarInformacionTarea(element.ID_TAREA, element.NOM_TAREA, element.DESCRIPCION, element.FEC_INI, element.FEC_FIN, element.ESTADO);
+
 
 
         var botonEditar = document.getElementById("editarTarea");
@@ -78,37 +86,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         });
-      
+
 
         var botonEliminar = document.getElementById("eliminarTarea");
 
         botonEliminar.addEventListener("click", function () {
-    
-          confirmDialog.style.display = 'block';
-          
-          confirmAction(function(option) {
 
-            if (option) {
-    
-              var id = nuevaTarjeta.id.split("-")[1];
 
-              console.log("ID DE LA TAREA A ELIMINAR: "+id);
-    
-              //METODO QUE BORRA LA TAREA
-              borrarTarea(id);
-      
+          if (event.target.id == "eliminarTarea") {
 
-          console.log("ENTRE AL BOTON")
-    
-            } else {
-              console.log('El usuario canceló');
-              event.stopPropagation();
+            console.log("ENTRE AL BOTON")
 
-            }
-          });
-    
+            over.style.display = 'block';
+            confirmDialog.style.display = 'block';
+
+            confirmAction(function (option) {
+
+              if (option) {
+
+                var id = nuevaTarjeta.id.split("-")[1];
+
+                //METODO QUE BORRA LA TAREA
+                borrarTarea(id);
+
+                window.location.reload();
+
+              } else {
+                console.log('El usuario canceló');
+
+              }
+
+            });
+
+          }
         });
-      
+
 
       });
 
@@ -118,51 +130,68 @@ document.addEventListener("DOMContentLoaded", function () {
 
       botonCambiar.addEventListener("click", function () {
 
+        botonCambiar.style.color ="red";
+
         event.stopPropagation();
         console.log("Botón presionado en la tarea con ID: " + nuevaTarjeta.id);
         var id = nuevaTarjeta.id.split("-")[1];
 
-        moverTarea(element.ESTADO,id)
-        
+        moverTarea(element.ESTADO, id)
+
         //window.location.reload();
         recuperarDatos();
       });
 
 
 
-      console.log(element.ID_TAREA+" "+element.ESTADO);
+      console.log(element.ID_TAREA + " " + element.ESTADO);
 
       ubicacionTarea(element.ESTADO).appendChild(nuevaTarjeta);
 
-      if(element.ESTADO == 'HEC'){
+      if (element.ESTADO == 'HEC') {
 
         botonCambiar.style.display = "none";
+        var contenedorBoton = document.getElementById("botones"+element.ID_TAREA);
+        
+        console.log(contenedorBoton);
+
+        var terminado = document.createElement("div");
+        terminado.innerHTML = `<h6 class="text-success">Tarea terminada</h6>`;
+        contenedorBoton.appendChild(terminado);
       }
 
     });
   }
 
   //ESCOGE EL CONTENEDOR DEPENDIENDO EL ESTADO DE LA TAREA
-  function ubicacionTarea(estado){
+  function ubicacionTarea(estado) {
 
-    if(estado == 'PHA'){
+    if (estado == 'PHA') {
       return contenedorTareasPorHacer;
     }
-    else if(estado == 'EPR'){
+    else if (estado == 'EPR') {
       return contenedorTareasEnProceso;
     }
-    else if(estado == 'HEC'){
+    else if (estado == 'HEC') {
       return contenedorTareasTerminadas;
     }
     return null;
   }
 
 
+  //METODO PARA SELECCIONAR EL ID
+
+  function seleccionarIDtarjeta() {
+
+    return document.getElementById("idTarea").value;
+  }
+
+
   //METODO PARA CREAR LAS TAREAS 
   function crearTarea(id, nombreTarea) {
 
-    if(nombreTarea.length > 22){
-      nombreTarea = nombreTarea.substring(0,22)+"...";
+    if (nombreTarea.length > 22) {
+      nombreTarea = nombreTarea.substring(0, 22) + "...";
     }
 
     var nuevaTarjetaCont = document.createElement("div");
@@ -173,9 +202,9 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="card-header d-flex justify-content-between align-items-center">
   <h3 class="card-title small">`+ nombreTarea + `</h3>
   <div class="card-icons">
-  <div class="d-flex">
-  <button class="btn btn-success mr-2 rounded-circle pasarEnProceso">
-  <span><i class="bi bi-check"></i></span>
+  <div class="d-flex" id="botones${id}">
+  <button type="button" class="btn btn-info  btn-circle btn-lg pasarEnProceso">
+  <i class="bi bi-chevron-double-right"></i></i>
   </button>
   </div>
   </div>
@@ -187,7 +216,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   //METODO PARA MOSTRAR LA INFORMACIÓN DE LA TAREA
-  function mostrarInformacionTarea(id,titulo, descripcion, fechaInicio, fechaFin) {
+  function mostrarInformacionTarea(id, titulo, descripcion, fechaInicio, fechaFin, estado) {
+
+    var pos1;
+    var pos2;
+    var pos3;
+    if(estado == 'PHA'){
+      pos1 = ['Por Hacer', 'PHA'];
+      pos2 = ['En Proceso', 'EPR'];
+      pos3 = ['Hecha', 'HEC'];
+    }else if(estado == 'EPR'){
+      pos1 = ['En Proceso', 'EPR'];
+      pos2 = ['Por Hacer', 'PHA'];
+      pos3 = ['Hecha', 'HEC'];
+    }else if(estado == 'HEC'){
+      pos1 = ['Hecha', 'HEC'];
+      pos2 = ['Por Hacer', 'PHA'];
+      pos3 = ['En Proceso', 'EPR'];
+    }
 
 
     var modal = document.createElement('div');
@@ -221,19 +267,21 @@ document.addEventListener("DOMContentLoaded", function () {
                    <div class="mb-3">
                        <label for="fechaFinal" class="form-label">Estado</label>
                     
-                       <select name="estado" class="form-select" aria-label="Default select example" required>
-                          <option value="PHA" >Por hacer</option>
-                          <option value="EPR" >En proceso</option>
-                          <option value="HEC" >Hechas</option>
+                       <select name="estado" class="form-select" aria-label="Default select example" id="estado" disabled>
+                          <option value="${pos1[1]}" >${pos1[0]}</option>
+                          <option value="${pos2[1]}" >${pos2[0]}</option>
+                          <option value="${pos3[1]}" >${pos3[0]}</option>
                         </select>
                     </div>
 
 
                    <div class="mb-3">
                        <label for="descripcion" class="form-label">Descripción:</label>
-                       <textarea class="form-control bloqueado" id="descripcion2" name="descripcion"  readOnly>${descripcion}</textarea>
+                       <textarea class="form-control bloqueado textarea-desplazable" id="descripcion2" name="descripcion" rows="5"  readOnly>${descripcion}</textarea>
                        <input type="text"  id="idTarea" name="idTarea" value = "${id}" style="display:none;">
                    </div>
+
+                   <div id="estado"></div>
 
                    <div class= "button-container">
                    <button type="button" class="btn btn-primary" id="editarTarea" >Editar</button>
@@ -250,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>
     `;
 
-    
+
 
     // Agregar el modal al documento
     document.body.appendChild(modal);
@@ -259,8 +307,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var bootstrapModal = new bootstrap.Modal(modal);
     bootstrapModal.show();
   }
-  
-  
+
+
   //METODO PARA HABILITAR LA ACTUALIZACION DE LA TAREA
   function habilitarActualizacion(botonEditar) {
 
@@ -274,23 +322,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
       var titulo = document.getElementById("nombreTarea2");
       titulo.classList.remove("bloqueado")
-      titulo.readOnly =false;
+      titulo.readOnly = false;
       titulo.required = true;
 
       var fechaInicio = document.getElementById("fechaInicio2");
       fechaInicio.classList.remove("bloqueado")
-      fechaInicio.readOnly =false;
+      fechaInicio.readOnly = false;
       fechaInicio.required = true;
 
       var fechaFin = document.getElementById("fechaFinal2");
       fechaFin.classList.remove("bloqueado")
-      fechaFin.readOnly =false;
+      fechaFin.readOnly = false;
       fechaFin.required = true;
 
       var descripcion = document.getElementById("descripcion2");
       descripcion.classList.remove("bloqueado")
-      descripcion.readOnly =false;
+      descripcion.readOnly = false;
       descripcion.required = true;
+
+      var estado = document.getElementById("estado");
+      estado.disabled = false;
+
 
     });
 
@@ -301,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function borrarTarea(id) {
 
     const url = '../Conexion/BorrarTarea.php';
-    var data = { id: id};
+    var data = { id: id };
 
     fetch(url, {
       method: 'POST',
@@ -325,17 +377,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var estado = '';
 
-    if(estadoAnterior == 'PHA'){
+    if (estadoAnterior == 'PHA') {
       estado = 'EPR';
     }
-    else if(estadoAnterior == 'EPR'){
+    else if (estadoAnterior == 'EPR') {
       estado = 'HEC';
-    }else{
+    } else {
       return;
     }
 
     const url = '../Conexion/ActualizarEstado.php';
-    var data = { id: id, estado: estado};
+    var data = { id: id, estado: estado };
 
     fetch(url, {
       method: 'POST',
@@ -353,27 +405,37 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  //VENTANA EMERGENTE
 
-  //VENTANA EMERGENTE 
+  var eventHandlersAdded = false;
+
   function confirmAction(callback) {
 
-  
+
     function handleConfirm() {
+      over.style.display = 'none';
       confirmDialog.style.display = 'none';
       callback(true); // El usuario ha elegido "Aceptar"
     }
-  
+
     function handleCancel() {
+      over.style.display = 'none';
       confirmDialog.style.display = 'none';
       callback(false); // El usuario ha elegido "Cancelar"
     }
-  
-    confirmButton.addEventListener('click', handleConfirm);
-    cancelButton.addEventListener('click', handleCancel);
+
+    if (!eventHandlersAdded) {
+      confirmButton.addEventListener("click", handleConfirm);
+      cancelButton.addEventListener("click", handleCancel);
+      eventHandlersAdded = true;
+    }
+
   }
 
 
-  function reiniciarDatos(){
+
+
+  function reiniciarDatos() {
 
     contenedorTareasTerminadas.innerHTML = '';
     contenedorTareasEnProceso.innerHTML = '';

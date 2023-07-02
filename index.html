@@ -77,7 +77,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción:</label>
-                            <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="5" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>
@@ -88,11 +88,15 @@
     
 </div>
 
-<div id="confirm-dialog">
-    <div class="message">¿Estás seguro?</div>
-    <button id="confirm-button">Aceptar</button>
-    <button id="cancel-button">Cancelar</button>
-  </div>
+<div class="overlay" id="over">
+
+    <div id="confirm-dialog">
+        <div class="message">¿Estás seguro?</div>
+        <button id="confirm-button">Aceptar</button>
+        <button id="cancel-button">Cancelar</button>
+      </div>
+
+</div>
 
   
 <script src="funcionalidades/script.js"></script>
