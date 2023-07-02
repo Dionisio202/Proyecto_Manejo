@@ -4,11 +4,25 @@ body{
     background-color:#196fd9;
 }
 
+.main-title{
+    color: white;
+    font-family: 'Roboto';
+    font-weight: 700;
+    font-size: 3rem;
+}
+
 .todo-title{
     color: white;
     font-family: 'Roboto';
     font-weight: 700;
     font-size: 2rem;
+}
+
+.card-title{
+    color: rgb(23, 22, 22);
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 1rem;
 }
 
 .custom-container-primary-section{
@@ -50,6 +64,14 @@ body{
   font-weight: 600;
 }
 
+.carta{
+  background-color:rgb(215, 215, 215);
+  border: 1px solid  rgb(175, 174, 174) ; /* Color de borde gris */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.6rem;
+}
+
+
 .boton {
     width: 65px;
     height: 65px;
@@ -71,10 +93,6 @@ body{
 }
 
 
-.carta{
-    margin: 15px;
-    
-}
 
 .carta i{ 
     display: flex;
@@ -85,7 +103,12 @@ body{
 
 
 .pasarEnProceso{
-    
+}
+
+.icon-arrow{
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
 }
 
 

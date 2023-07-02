@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="card-icons">
   <div class="d-flex" id="botones${id}">
   <button type="button" class="btn btn-info  btn-circle btn-lg pasarEnProceso">
-  <i class="bi bi-chevron-double-right"></i></i>
+  <i class="bi bi-arrow-right icon-arrow"></i></i>
   </button>
   </div>
   </div>
