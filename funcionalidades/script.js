@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //METODO PARA RECUPERAR LOS DATOS DEL ARCHIVO PHP
   function recuperarDatos() {
-    axios.get('../Proyecto_Manejo/Conexion/RecibirDatos.php')
+    axios.get('../Conexion/RecibirDatos.php')
       .then(response => {
         var datos = response.data;
         UbicarTareas(datos);
