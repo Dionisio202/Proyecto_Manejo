@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
   //ENCONTRAMOS EL BOTON PARA QUE APAREZCA EL FORMULARIO PARA AGREGAR UNA TAREA
   const btnAgregar = document.getElementById("btnAgregar");
 
+  const btnBorrar = document.getElementById("btnBorrar");
+
   //ENCONTRAMOS EL FORMULARIO PARA AGREGAR UNA TAREA
   const formularioModal = document.getElementById("formularioModal");
 
@@ -14,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const contenedorTareasEnProceso = document.getElementById("contenedorTareasEnProceso");
   //ENCONTRAMOS EL CONTENEDOR DE LAS TARJETAS TERMINADAS
   const contenedorTareasTerminadas = document.getElementById("contenedorTareasHechas");
+
 
   //ENCONTRAMOS LA VENTANA EMERGENTE Y LOS BOTONES DE CONFIRMAR Y CANCELAR
   const over = document.getElementById('over');
@@ -451,6 +454,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     console.log(Datos + "   Soy DATOS");
   }
+
+
+
+  btnBorrar.addEventListener("click", function () {
+
+    console.log("ENTRE AL BOTON")
+
+            over.style.display = 'block';
+            confirmDialog.style.display = 'block';
+
+            confirmAction(function (option) {
+
+              if (option) {
+
+                window.location.href = "../Conexion/BorrarTodo.php";
+
+
+              } else {
+                console.log('El usuario canceló');
+
+              }
+
+            });
+  });
 
 
 });
