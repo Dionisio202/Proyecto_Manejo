@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+body{
+    background-color:#1b5cac;
+}
+
+.main-title{
+    color: white;
+    font-family: 'Roboto';
+    font-weight: 700;
+    font-size: 3rem;
+}
+
+.todo-title{
+    color: white;
+    font-family: 'Roboto';
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+.card-title{
+    color: rgb(23, 22, 22);
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.custom-container-primary-section{
+  border-radius: 12px; /* Ajusta el valor según tus necesidades */
+  border: 1px solid #1e699b; /* Color de borde gris */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #237fbd; /* Sombra de fondo */
+}
+.custom-container-cards-todo{
+  border-radius: 12px; /* Ajusta el valor según tus necesidades */
+  border: 1px solid #62439b; /* Color de borde gris */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #794ad0; /* Sombra de fondo */
+}
+
+.custom-container-cards-in-process{
+  border-radius: 12px; /* Ajusta el valor según tus necesidades */
+  border: 1px solid  #d89639; /* Color de borde gris */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color:  #f7a93d; /* Sombra de fondo */
+}
+
+.custom-container-cards-done{
+  border-radius: 12px; /* Ajusta el valor según tus necesidades */
+  border: 1px solid  #138f57 ; /* Color de borde gris */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color:  #0fbb6e ; /* Sombra de fondo */
+}
+
+.sections-titles{
+  color: white;
+  font-family: 'Roboto';
+  font-weight: 600;
+  font-size: 1.6rem;
+}
+
+.icon-plus{
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.carta{
+  background-color:rgb(215, 215, 215);
+  border: 1px solid  rgb(175, 174, 174) ; /* Color de borde gris */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.6rem;
+}
+
+
+.boton {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: rgb(44, 37, 51);
+    color: white;
+    border: none;
+    font-size: 20px;
+    margin: 10px;
+}
+
+.boton i {
+    font-size: 47px;
+    height: 30px;
+    color: rgb(46, 116, 130);
+    display: flex;
+            justify-content: center;
+            align-items: center;
+}
+
+
+
+.carta i{ 
+    display: flex;
+            justify-content: center;
+            align-items: center;
+            
+}
+
+
+.pasarEnProceso{
+}
+
+.icon-arrow{
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+
+
+#confirm-dialog {
+    display: none;
+    position: fixed;
+    z-index: 100000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    border-color: #080d25;
+  }
+  
+  .message {
+    margin-bottom: 10px;
+  }
+  
+  .buttonAlert {
+    margin-right: 10px;
+  }
+
+
+  .bloqueado{
+
+    background-color: white;
+    pointer-events: none;
+    cursor: default;
+
+
+}
+
+.bloqueado:focus{
+
+    background-color: white;
+    pointer-events: none;
+    cursor: default;
+ 
+
+}
+
+.button-container {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+  }
+
+  .btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
+.textarea-desplazable {
+    pointer-events: auto;
+    cursor: text;
+  }
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  z-index: 99999; /* Asegurar que esté por encima de otros elementos */
+}
