@@ -195,3 +195,39 @@ body{
   background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
   z-index: 99999; /* Asegurar que esté por encima de otros elementos */
 }
+
+#contenedorTareasPorHacer, #contenedorTareasEnProceso, #contenedorTareasHechas{
+  height: 15rem !important;
+  overflow-y: scroll;
+  margin-bottom: 2rem;
+
+}
+
+/* Cambiar el color de la barra de desplazamiento */
+#contenedorTareasPorHacer::-webkit-scrollbar,
+#contenedorTareasEnProceso::-webkit-scrollbar,
+#contenedorTareasHechas::-webkit-scrollbar {
+  width: 10px; /* Ancho de la barra de desplazamiento */
+  background-color:#794ad0; /* Color de fondo de la barra */
+}
+
+/* Cambiar el color del riel de la barra de desplazamiento */
+#contenedorTareasPorHacer::-webkit-scrollbar-track,
+#contenedorTareasEnProceso::-webkit-scrollbar-track,
+#contenedorTareasHechas::-webkit-scrollbar-track {
+  background-color: rgb(215, 215, 215);; /* Color de fondo del riel */
+}
+
+/* Cambiar el color del pulgar de la barra de desplazamiento */
+#contenedorTareasPorHacer::-webkit-scrollbar-thumb,
+#contenedorTareasEnProceso::-webkit-scrollbar-thumb,
+#contenedorTareasHechas::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color del pulgar */
+}
+
+/* Cambiar el color del pulgar al pasar el mouse sobre la barra de desplazamiento */
+#contenedorTareasPorHacer::-webkit-scrollbar-thumb:hover,
+#contenedorTareasEnProceso::-webkit-scrollbar-thumb:hover,
+#contenedorTareasHechas::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color del pulgar al pasar el mouse */
+}
