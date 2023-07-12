@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const confirmButton = document.getElementById('confirm-button');
   const cancelButton = document.getElementById('cancel-button');
 
+//ENCONTRAMOS EL BOTON PARA TRABAJAR
+  const trabajar = document.getElementById("trabajar");
 
 
   //DEFINIMOS UNA VARIABLE QUE CONTENDRA LOS DATOS RECUPERADOS DEL ARCHIVO PHP
@@ -31,6 +33,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   recuperarDatos();
 
+
+  //REGISTRO EQUIPO DE TRABAJO
+
+  const btnAgregarUser = document.getElementById("agregarUser");
+  const btneliminarUser = document.getElementById("eliminarUser");
+  const contenedorUser = document.getElementById("contenedorUser");
 
   //EVENTO QUE AL APLASTARLO MUESTRA EL FORMULARIO PARA AGREGAR UNA TAREA
   btnAgregar.addEventListener("click", function () {
@@ -448,7 +456,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-  function mostrar() {
+  function mostrar(event) {
     Datos.forEach(element => {
       console.log(element.NOM_TAREA);
     });
@@ -478,6 +486,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
             });
   });
+
+
+  btnAgregarUser.addEventListener("click", function () {
+
+    var users = `
+    <div class="input-group mb-2 contUser"  >
+    <div class="input-group-prepend">
+      <span class="input-group-text spanUser"  style="height: 2rem; background-color: #412c67; border: 1px solid #412c67;" ><i class="bi bi-people"></i></span>
+    </div>
+    <input  name ="nombre[]" type="text" style="height: 2rem;" class="form-control inputUsuario" placeholder="Ingresa el usuario"  required>
+</div>
+
+<div class="input-group mb-3 contUser"  >
+    <div class="input-group-prepend">
+      <span class="input-group-text spanUser"style="height: 2rem; background-color: #412c67; border: 1px solid #412c67;" ><i class="bi bi-envelope"></i></span>
+    </div>
+    <input name ="email[]" style="height: 2rem;" type="email" class="form-control inputUsuario" placeholder="Ingresa de email" required>
+</div>   
+    `
+
+    var cont = document.createElement("div");
+
+    cont.innerHTML = users; 
+
+    contenedorUser.appendChild(cont);
+
+  });
+
 
 
 });
