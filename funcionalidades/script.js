@@ -52,10 +52,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const responsable = document.getElementById("responsable");
 
+  const nGrupo = document.getElementById("nGrupo");
+
 
 if(localStorage.getItem("grupo") != null){
 
+
   console.log("ENTRE AL IF"+localStorage.getItem("grupo"));
+
+  nGrupo.innerHTML = localStorage.getItem("grupo");
   
   ingresoCard.style.display = "none";
   registroCard.style.display = "none";
@@ -78,24 +83,43 @@ if(localStorage.getItem("grupo") != null){
 
     nombreGrupo.value = localStorage.getItem("grupo");
 
-    responsable.innerHTML = "";
-
-    var opcion = new Option( "No asignado", 13 );
-    responsable.appendChild(opcion);
-
-    var as= await recuperarUsers();
-
-    as.forEach(element => {
-      console.log(element);
-      var option = new Option( element['NOMBRE_INTEGRANTE'], element['ID_INTEGRANTE']);
-      responsable.appendChild(option);
-    });
+    recuperarIntegrantes(responsable,null);
+    
 
     var bootstrapModal = new bootstrap.Modal(formularioModal);
     bootstrapModal.show();
 
     mostrar();
   });
+
+  //AGREGAR RESPONSABLE
+  
+  async function recuperarIntegrantes(user,encargado){
+
+    user.innerHTML = "";
+    
+    var as= await recuperarUsers();
+    
+      
+          var opcion = new Option( "No asignado", 13 );
+          user.appendChild(opcion);
+
+    as.forEach(element => {
+      console.log(element);
+      console.log(encargado)
+      var option = new Option( element['NOMBRE_INTEGRANTE'], element['ID_INTEGRANTE']);
+
+      if(encargado == element['ID_INTEGRANTE']){
+        console.log("ENTRE AL IF"+ element['ID_INTEGRANTE']);
+        option.selected = true;
+      }
+
+
+      user.appendChild(option);
+    });
+
+
+  }
 
   //RECUPERAR USUARIOS DEL GRUPO
   async function recuperarUsers() {
@@ -154,7 +178,11 @@ if(localStorage.getItem("grupo") != null){
 
         mostrarInformacionTarea(element.ID_TAREA, element.NOM_TAREA, element.DESCRIPCION, element.FEC_INI, element.FEC_FIN, element.ESTADO);
 
+        var responsableEdit = document.getElementById("responsableEdit");
 
+        recuperarIntegrantes(responsableEdit,element.ASIGNADO_TAREA);
+
+   
 
         var botonEditar = document.getElementById("editarTarea");
 
@@ -178,7 +206,7 @@ if(localStorage.getItem("grupo") != null){
 
           if (event.target.id == "eliminarTarea") {
 
-            console.log("ENTRE AL BOTON")
+
 
             over.style.display = 'block';
             confirmDialog.style.display = 'block';
@@ -289,6 +317,7 @@ if(localStorage.getItem("grupo") != null){
   <button type="button" class="btn btn-info  btn-circle btn-lg pasarEnProceso">
   <i class="bi bi-arrow-right icon-arrow"></i></i>
   </button>
+  
   </div>
   </div>
   </div>
@@ -319,6 +348,7 @@ if(localStorage.getItem("grupo") != null){
     }
 
 
+
     var modal = document.createElement('div');
     modal.className = 'modal';
     modal.id = 'formularioActualizar';
@@ -338,6 +368,17 @@ if(localStorage.getItem("grupo") != null){
                        <label for="nombreTarea" class="form-label">Nombre de Tarea:</label>
                        <input type="text" class="form-control bloqueado" id="nombreTarea2" name="nombreTarea" value = "${titulo}" readOnly>
                    </div>
+
+                   <div class="mb-3">
+                       <label for="responsableEdit" class="form-label">Responsable</label>
+                    
+                       <select name="responsableEdit" class="form-select" aria-label="Default select example" id="responsableEdit" disabled>
+                          
+                        </select>
+                    </div>
+
+
+
                    <div class="mb-3">
                        <label for="fechaInicio" class="form-label">Fecha de Inicio:</label>
                        <input type="date" class="form-control bloqueado" id="fechaInicio2" name="fechaInicio"  value = "${fechaInicio}" readOnly>
@@ -425,6 +466,9 @@ if(localStorage.getItem("grupo") != null){
 
       var estado = document.getElementById("estado");
       estado.disabled = false;
+
+      var responsableEdit = document.getElementById("responsableEdit");
+      responsableEdit.disabled = false;
 
 
     });

@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $FEC_FIN = $_POST['fechaFinal'];
     $DESCRIPCION = $_POST['descripcion'];
     $ESTADO = $_POST['estado'];
+    $RESPONSABLE = $_POST['responsableEdit'];
 
 
     $dsn = 'mysql:host=localhost;dbname=proyecto_manejo';
@@ -14,14 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $conexion = new PDO($dsn, $username, $password);
         $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = 'UPDATE TAREAS SET NOM_TAREA = ? , FEC_INI = ? , FEC_FIN = ? , DESCRIPCION = ? , ESTADO = ? WHERE ID_TAREA = ?';
+        $sql = 'UPDATE TAREAS SET NOM_TAREA = ? , FEC_INI = ? , FEC_FIN = ? , DESCRIPCION = ? , ESTADO = ?, ASIGNADO_TAREA = ? WHERE ID_TAREA = ?';
         $statement = $conexion->prepare($sql);
         $statement->bindParam(1, $NOM_TAREA);
         $statement->bindParam(2, $FEC_INI);
         $statement->bindParam(3, $FEC_FIN);
         $statement->bindParam(4, $DESCRIPCION);
         $statement->bindParam(5, $ESTADO);
-        $statement->bindParam(6, $ID_TAREA);
+        $statement->bindParam(6, $RESPONSABLE);
+        $statement->bindParam(7, $ID_TAREA);
         $statement->execute();
         
         echo "<script>window.location.href = '../index.html';</script>";

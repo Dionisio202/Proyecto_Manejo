@@ -38,6 +38,15 @@ body{
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: #237fbd; /* Sombra de fondo */
 }
+
+.custom-container-second-section{
+  border-radius: 12px; /* Ajusta el valor según tus necesidades */
+  border: 1px solid #124079; /* Color de borde gris */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #124079; /* Sombra de fondo */
+}
+
+
 .custom-container-cards-todo{
   border-radius: 12px; /* Ajusta el valor según tus necesidades */
   border: 1px solid #62439b; /* Color de borde gris */
