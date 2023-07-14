@@ -180,9 +180,11 @@
 
     </div>
 
+    
+
     <div class="overlay" id="inicio" style="display: flex;">
 
-        <div class="card inicio" id="ingresoCard" style="width: 20rem; height: 25rem; display: none; ">
+        <div class="card inicio" id="ingresoCard" style="width: 20rem; height: 25rem; display: none; z-index: 1 !important;">
             <div class="card-body">
                 <h5 class="todo-title">Bienvenido !</h5>
 
@@ -218,7 +220,7 @@
 
 
 
-        <div class="card inicio" id="registroCard" style="width: 25rem; height: 35rem; display: none; ">
+        <div class="card inicio" id="registroCard" style="width: 25rem; height: 35rem; display: none; z-index: 10; ">
             <div class="card-body">
                 <h5 class="todo-title">Registra tu equipo!</h5>
             
@@ -283,6 +285,17 @@
             </div>
         </div>
     </div>
+
+    <div class="overlay" id="alertaInicio">
+
+        <div id="confirm-dialog-inicio">
+            <div class="message" id="msg"></div>
+            <button id="confirm-button-inicio" class="btn btn-danger">Aceptar</button>
+        </div>
+
+    </div>
+
+  
 
 
 

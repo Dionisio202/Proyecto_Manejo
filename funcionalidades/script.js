@@ -54,6 +54,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const nGrupo = document.getElementById("nGrupo");
 
+  const idGrupo = document.getElementById("idGrupo");
+
+  //ALERTAS
+
+  const formuIngreso = document.getElementById("confirm-dialog-inicio");
+  const alertaInicio = document.getElementById("alertaInicio");
+  const confirmButtonInicio = document.getElementById("confirm-button-inicio");
+  const msg = document.getElementById("msg");
+
 
 if(localStorage.getItem("grupo") != null){
 
@@ -662,7 +671,12 @@ if(localStorage.getItem("grupo") != null){
     validarFormulario().then(function (esValido) {
       if (esValido) {
 
-        console.log("SI EXISTO");
+        alertaInicio.style.display = "block";
+        msg.innerHTML = "El grupo ya existe";
+
+
+        formuIngreso.style.display = "block";
+
 
       } else {
         console.log("NO EXISTO");
@@ -753,7 +767,7 @@ if(localStorage.getItem("grupo") != null){
 //VALIDACION DE FORMULARIO DE INGRESO
   function siExiste(){
 
-    var grupo = document.getElementById("idGrupo").value;
+    var grupo = idGrupo.value;
     console.log(grupo + "  AQUI ESTA EL GRUPO");
 
     return new Promise(function (resolve, reject) {
@@ -792,10 +806,26 @@ if(localStorage.getItem("grupo") != null){
       } else {
         console.log("NO EXISTO");
 
+        alertaInicio.style.display = "block";
+        msg.innerHTML = "El grupo no existe";
+
+
+        formuIngreso.style.display = "block";
+
       }
     }).catch(function (error) {
       console.log(error + " AQUI ES EL ERROR");
     });
+  });
+
+ 
+  confirmButtonInicio.addEventListener("click", function () {
+
+    formuIngreso.style.display = "none";
+    alertaInicio.style.display = "none";
+    idGrupo.value = "";
+
+
   });
 
 

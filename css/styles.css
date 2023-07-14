@@ -143,6 +143,23 @@ body{
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     border-color: #080d25;
   }
+
+  #confirm-dialog-inicio {
+    display: none;
+    position: fixed;
+    z-index: 100000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    border-color: #080d25;
+  }
+  
   
   .message {
     margin-bottom: 10px;
@@ -209,7 +226,7 @@ body{
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
-  z-index: 99999; /* Asegurar que esté por encima de otros elementos */
+  z-index: 99999 !important; /* Asegurar que esté por encima de otros elementos */
 }
 
 #contenedorTareasPorHacer, #contenedorTareasEnProceso, #contenedorTareasHechas{
