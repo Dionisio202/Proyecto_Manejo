@@ -9,7 +9,7 @@ $password = '';
 try {
     $conexion = new PDO($dsn, $username, $password);
     $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $sql = 'SELECT * FROM TAREAS WHERE NOMBRE_GRUPO = "'.$dato.'"';
+    $sql = 'SELECT * FROM integrante WHERE GRUPO = "'.$dato.'"';
     $statement = $conexion->prepare($sql);
     $statement->execute();
     $resultados = array();

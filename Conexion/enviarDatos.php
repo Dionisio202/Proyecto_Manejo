@@ -1,18 +1,21 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ID_TAREA = NULL;
+    $GRUPO = $_POST['nombreGrupo'];
+    $RESPONSABLE = $_POST['responsable'];
     $NOM_TAREA = $_POST['nombreTarea'];
     $FEC_INI = $_POST['fechaInicio'];
     $FEC_FIN = $_POST['fechaFinal'];
     $DESCRIPCION = $_POST['descripcion'];
     $ESTADO = 'PHA';
+
     $dsn = 'mysql:host=localhost;dbname=proyecto_manejo';
     $username = 'root';
     $password = '';
     try {
         $conexion = new PDO($dsn, $username, $password);
         $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = 'INSERT INTO TAREAS VALUES (?,?,?,?,?,?)';
+        $sql = 'INSERT INTO TAREAS VALUES (?,?,?,?,?,?,?,?)';
         $statement = $conexion->prepare($sql);
         $statement->bindParam(1, $ID_TAREA);
         $statement->bindParam(2, $NOM_TAREA);
@@ -20,6 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $statement->bindParam(4, $FEC_FIN);
         $statement->bindParam(5, $DESCRIPCION);
         $statement->bindParam(6, $ESTADO);
+        $statement->bindParam(7, $GRUPO);
+        $statement->bindParam(8, $RESPONSABLE);
         $statement->execute();
         echo "<script>window.location.href = '../index.html';</script>";
         exit();
