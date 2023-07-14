@@ -15,7 +15,19 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
+
                 <h1 class="text-center mt-4 mb-4 main-title">To Do List</h1>
+
+            </div>
+            <div class="col-12">
+
+                <div class="button-container">
+                    <button id="cerrarSesion" class="btn btn-light me-1 mb-3">
+                        <i class="bi bi-door-open"></i></i>
+                        Cerrar Sesion</button>
+                </div>
+
+
             </div>
             <div class="col-12">
                 <div class="container custom-container-primary-section mb-4">
@@ -30,9 +42,10 @@
                                 <button id="btnAgregar" class="btn btn-primary me-3 mb-3">
                                     <i class="bi bi-plus icon-plus"></i>
                                     Agregar tarea</button>
-                                <button id="btnBorrar" class="btn btn-danger me-3 mb-3">
+                                <button id="btnBorrar" class="btn btn-danger me-5 mb-3">
                                     <i class="bi bi-trash"></i>
                                     Eliminar todas las tareas</button>
+
                             </div>
                         </div>
 
@@ -93,6 +106,21 @@
                     <div class="modal-body">
                         <form method="POST" action="../Conexion/enviarDatos.php" id="formulario1">
                             <div class="mb-3">
+                                <label for="nombreTarea" class="form-label">Grupo:</label>
+                                <input type="text" class="form-control bloqueado" id="nombreGrupo" name="nombreGrupo"
+                                    required>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label for="responsable" class="form-label">Responsable:</label>
+                                <select name="responsable" class="form-select" aria-label="Default select example"
+                                    id="responsable" >
+                                   
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="nombreTarea" class="form-label">Nombre de Tarea:</label>
                                 <input type="text" class="form-control" id="nombreTarea" name="nombreTarea" required>
                             </div>
@@ -129,92 +157,108 @@
     </div>
 
     <div class="overlay" id="inicio" style="display: flex;">
-     
-            <div class="card inicio" style="width: 20rem; height: 25rem; display: flex; ">
-                <div class="card-body">
-                    <h5 class="todo-title">Bienvenido !</h5>
 
-                    <i class="bi bi-person-workspace  "   style="font-size: 2rem; color: white;"></i>
+        <div class="card inicio" id="ingresoCard" style="width: 20rem; height: 25rem; display: none; ">
+            <div class="card-body">
+                <h5 class="todo-title">Bienvenido !</h5>
 
-                    <hr style="background-color: white; height: 5px;">
+                <i class="bi bi-person-workspace  " style="font-size: 2rem; color: white;"></i>
 
-                    <form action="">
+                <hr style="background-color: white; height: 5px;">
 
-                    
-                    <div class="input-group mb-3"  >
+                <form action="" method="POST" id="formularioIngreso">
+
+
+                    <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                          <span class="input-group-text span" id="basic-addon1"><i class="bi bi-briefcase-fill"></i></span>
+                            <span class="input-group-text span" id="basic-addon1"><i
+                                    class="bi bi-briefcase-fill"></i></span>
                         </div>
-                        <input id="idGrupo" name ="idGrupo" type="text" class="form-control inputGrupo" placeholder="Ingresa tu grupo !" aria-label="Ingreso" aria-describedby="basic-addon1" required>
-                    </div>
-                    
-                      <button class="btn btn-primary element " id="trabajar" ><i class="bi bi-code"></i> Trabajar!</button>
-                    
-                      
-                    </form>
-                    
-                    <div class="row" style="margin-top: 2rem;">
-                        <button class="btn btn-dark element"><i class="bi bi-plus icon-plus"></i> Crear Grupo </button>
+                        <input id="idGrupo" name="idGrupo" type="text" class="form-control inputGrupo"
+                            placeholder="Ingresa tu grupo !" aria-label="Ingreso" aria-describedby="basic-addon1"
+                            autocomplete="off" required>
                     </div>
 
-                  </div>
-                      </div>
+                    <button class="btn btn-primary element " id="trabajar"><i class="bi bi-code"></i> Trabajar!</button>
 
 
+                </form>
 
-                <div class="card inicio" style="width: 25rem; height: 35rem; display: flex; ">
-                    <div class="card-body">
-                        <h5 class="todo-title">Registra tu equipo!</h5>
-    
-                        <i class="bi bi-person-workspace  "   style="font-size: 2rem; color: white;"></i>
-    
-                        <hr style="background-color: white; height: 5px;">
-    
-                        <form action="Conexion/ingresarGrupo.php" method="POST">
-    
-                        
-                        <div class="input-group mb-3"  >
-                            <div class="input-group-prepend">
-                              <span class="input-group-text span" ><i class="bi bi-briefcase-fill"></i></span>
-                            </div>
-                            <input  name ="grupo" type="text" class="form-control inputGrupo" placeholder="Nombre de tu grupo?"   required>
-                        </div>
+                <div class="row" style="margin-top: 2rem;">
+                    <button class="btn btn-dark element" id="btnCrearGrupo"><i class="bi bi-plus icon-plus"></i> Crear
+                        Grupo </button>
+                </div>
 
-                        <div class="scroll" id="contenedorUser">
-
-                            <div>
-
-                            <div class="input-group mb-2 contUser"  >
-                                <div class="input-group-prepend">
-                                  <span class="input-group-text spanUser"  style="height: 2rem; background-color: #412c67; border: 1px solid #412c67;" ><i class="bi bi-people"></i></span>
-                                </div>
-                                <input  name ="nombre[]" type="text" style="height: 2rem;" class="form-control inputUsuario" placeholder="Ingresa el usuario"  required>
-                            </div>
-
-                            <div class="input-group mb-3 contUser"  >
-                                <div class="input-group-prepend">
-                                  <span class="input-group-text spanUser"style="height: 2rem; background-color: #412c67; border: 1px solid #412c67;" ><i class="bi bi-envelope"></i></span>
-                                </div>
-                                <input name ="email[]" style="height: 2rem;" type="email" class="form-control inputUsuario" placeholder="Ingresa de email" required>
-                            </div>
-              
-                        </div>
-                        
-                        </div>
-        
-                          <button class="btn btn-primary element " type="button" id="agregarUser" ><i class="bi bi-person-plus"></i> Añadir Usuario</button>
-                        
-                          <button class="btn btn-danger element " type="button" id="eliminarUser"  ><i class="bi bi-person-x"></i> Eliminar Usuario</button>
-                        
-                          
-                          <div class="row" style="margin-top: 2rem;">
-                            <button class="btn btn-dark element"><i class="bi bi-plus icon-plus"></i> Crear Grupo </button>
-                        </div>
-                        
-                    </form>
-                          </div>
-                    </div>
+            </div>
         </div>
+
+
+
+        <div class="card inicio" id="registroCard" style="width: 25rem; height: 35rem; display: none; ">
+            <div class="card-body">
+                <h5 class="todo-title">Registra tu equipo!</h5>
+            
+                <i class="bi bi-person-workspace  " style="font-size: 2rem; color: white;"></i>
+
+                <hr style="background-color: white; height: 5px;">
+
+
+                <form action="" method="POST" id="formularioRegistro">
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text span"><i class="bi bi-briefcase-fill"></i></span>
+                        </div>
+                        <input name="grupo" type="text" class="form-control inputGrupo"
+                            placeholder="Nombre de tu grupo?" id="grupoRegistro" required autocomplete="off">
+                    </div>
+
+                    <div class="scroll" id="contenedorUser">
+
+                        <div>
+
+                            <div class="input-group mb-2 contUser">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text spanUser"
+                                        style="height: 2rem; background-color: #412c67; border: 1px solid #412c67;"><i
+                                            class="bi bi-people"></i></span>
+                                </div>
+                                <input name="nombre[]" type="text" style="height: 2rem;"
+                                    class="form-control inputUsuario" placeholder="Ingresa el usuario" required
+                                    autocomplete="off">
+                            </div>
+
+                            <div class="input-group mb-3 contUser">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text spanUser"
+                                        style="height: 2rem; background-color: #412c67; border: 1px solid #412c67;"><i
+                                            class="bi bi-envelope"></i></span>
+                                </div>
+                                <input name="email[]" style="height: 2rem;" type="email"
+                                    class="form-control inputUsuario" placeholder="Ingresa de email" required
+                                    autocomplete="off">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-primary element " type="button" id="agregarUser"><i
+                            class="bi bi-person-plus"></i> Añadir Usuario</button>
+
+                    <button class="btn btn-danger element " type="button" id="eliminarUser"><i
+                            class="bi bi-person-x"></i> Eliminar Usuario</button>
+
+
+                    <div class="row" style="margin-top: 2rem;">
+                        <button class="btn btn-dark element"><i class="bi bi-plus icon-plus"></i> Registrar Grupo
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 

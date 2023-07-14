@@ -19,8 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $statement->execute();
 
-        echo 'Exito';
-
         $sql = " INSERT INTO integrante VALUES (null,?, ?,?)";
   
 
@@ -33,6 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $statement->execute();
 
         }
+
+        echo $grupo;
 
 
         exit();

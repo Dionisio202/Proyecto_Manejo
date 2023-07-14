@@ -31,28 +31,100 @@ document.addEventListener("DOMContentLoaded", function () {
   //DEFINIMOS UNA VARIABLE QUE CONTENDRA LOS DATOS RECUPERADOS DEL ARCHIVO PHP
   var Datos = [];
 
-  recuperarDatos();
-
 
   //REGISTRO EQUIPO DE TRABAJO
 
   const btnAgregarUser = document.getElementById("agregarUser");
   const btneliminarUser = document.getElementById("eliminarUser");
   const contenedorUser = document.getElementById("contenedorUser");
+  const btnCerrarSesion = document.getElementById("cerrarSesion");
+
+  const formularioRegistro = document.getElementById("formularioRegistro"); 
+  const formularioIngreso = document.getElementById("formularioIngreso");
+  //CARDS 
+
+  const ingresoCard = document.getElementById("ingresoCard");
+  const registroCard = document.getElementById("registroCard");
+  const inicio = document.getElementById("inicio");
+  const btnCrearGrupo = document.getElementById("btnCrearGrupo");
+
+  const nombreGrupo = document.getElementById("nombreGrupo");
+
+  const responsable = document.getElementById("responsable");
+
+
+if(localStorage.getItem("grupo") != null){
+
+  console.log("ENTRE AL IF"+localStorage.getItem("grupo"));
+  
+  ingresoCard.style.display = "none";
+  registroCard.style.display = "none";
+  inicio.style.display = "none";
+
+
+  //CERRAR SESION
+  btnCerrarSesion.addEventListener("click", function () {
+      
+      localStorage.clear();
+      window.location.reload();
+  });
+
+
+  recuperarDatos();
+
 
   //EVENTO QUE AL APLASTARLO MUESTRA EL FORMULARIO PARA AGREGAR UNA TAREA
-  btnAgregar.addEventListener("click", function () {
+  btnAgregar.addEventListener("click", async function () {
+
+    nombreGrupo.value = localStorage.getItem("grupo");
+
+    responsable.innerHTML = "";
+
+    var opcion = new Option( "No asignado", 13 );
+    responsable.appendChild(opcion);
+
+    var as= await recuperarUsers();
+
+    as.forEach(element => {
+      console.log(element);
+      var option = new Option( element['NOMBRE_INTEGRANTE'], element['ID_INTEGRANTE']);
+      responsable.appendChild(option);
+    });
+
     var bootstrapModal = new bootstrap.Modal(formularioModal);
     bootstrapModal.show();
 
     mostrar();
   });
 
+  //RECUPERAR USUARIOS DEL GRUPO
+  async function recuperarUsers() {
+    try {
+      var response = await axios.get('../Conexion/recibirNombres.php', {
+        params: {
+          id: localStorage.getItem("grupo")
+        }
+      });
+  
+      var datos = response.data;
+      return datos;
+    } catch (error) {
+      console.log(error + " AQUI ES EL ERROR");
+      throw error; // Lanzar el error para manejarlo en el código que llama a recuperarUsers
+    }
+  }
+
+
+
 
 
   //METODO PARA RECUPERAR LOS DATOS DEL ARCHIVO PHP
   function recuperarDatos() {
-    axios.get('../Conexion/RecibirDatos.php')
+    axios.get('../Conexion/RecibirDatos.php',{
+      params: {
+        id: localStorage.getItem("grupo")
+      }
+    })
       .then(response => {
         var datos = response.data;
         UbicarTareas(datos);
@@ -276,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
                    </div>
 
                    <div class="mb-3">
-                       <label for="fechaFinal" class="form-label">Estado</label>
+                       <label for="estado" class="form-label">Estado</label>
                     
                        <select name="estado" class="form-select" aria-label="Default select example" id="estado" disabled>
                           <option value="${pos1[1]}" >${pos1[0]}</option>
@@ -476,7 +548,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
               if (option) {
 
-                window.location.href = "../Conexion/BorrarTodo.php";
+                id = localStorage.getItem("grupo");
+
+                window.location.href = "../Conexion/BorrarTodo.php?id=" + id + "";
 
 
               } else {
@@ -487,6 +561,26 @@ document.addEventListener("DOMContentLoaded", function () {
             });
   });
 
+}else{
+
+  ingresoCard.style.display = "flex";
+  registroCard.style.display = "none";
+  inicio.style.display = "block";
+
+}
+
+  //AQUI TERMINA
+
+  //REGISTRAR GRUPO
+
+  btnCrearGrupo.addEventListener("click", function () {
+
+    registroCard.style.display = "flex";
+    ingresoCard.style.display = "none";
+
+  });
+
+
 
   btnAgregarUser.addEventListener("click", function () {
 
@@ -495,14 +589,14 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="input-group-prepend">
       <span class="input-group-text spanUser"  style="height: 2rem; background-color: #412c67; border: 1px solid #412c67;" ><i class="bi bi-people"></i></span>
     </div>
-    <input  name ="nombre[]" type="text" style="height: 2rem;" class="form-control inputUsuario" placeholder="Ingresa el usuario"  required>
+    <input  name ="nombre[]" type="text" style="height: 2rem;" class="form-control inputUsuario" placeholder="Ingresa el usuario"  required autocomplete="off">
 </div>
 
 <div class="input-group mb-3 contUser"  >
     <div class="input-group-prepend">
       <span class="input-group-text spanUser"style="height: 2rem; background-color: #412c67; border: 1px solid #412c67;" ><i class="bi bi-envelope"></i></span>
     </div>
-    <input name ="email[]" style="height: 2rem;" type="email" class="form-control inputUsuario" placeholder="Ingresa de email" required>
+    <input name ="email[]" style="height: 2rem;" type="email" class="form-control inputUsuario" placeholder="Ingresa de email" required autocomplete="off">
 </div>   
     `
 
@@ -512,6 +606,152 @@ document.addEventListener("DOMContentLoaded", function () {
 
     contenedorUser.appendChild(cont);
 
+  });
+
+
+
+
+  //ENVIO DE FORMULARIO DE REGISTRO 
+  formularioRegistro.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    validarFormulario().then(function (esValido) {
+      if (esValido) {
+
+        console.log("SI EXISTO");
+
+      } else {
+        console.log("NO EXISTO");
+
+        enviarFormularioAJAX(formularioRegistro);
+      }
+    }).catch(function (error) {
+      console.log(error + " AQUI ES EL ERROR");
+    });
+  });
+
+
+  //VALIDACION DE FORMULARIO DE REGISTRO
+  function validarFormulario() {
+    var grupo = document.getElementById("grupoRegistro").value;
+  
+    return new Promise(function (resolve, reject) {
+      recuperarGrupos().then(function (gruposExistentes) {
+        var esValido = false;
+  
+        gruposExistentes.forEach(function (element) {
+          console.log(element['NOMBRE_GRUPO']);
+  
+          if (element['NOMBRE_GRUPO'] === grupo) {
+            esValido = true;
+          }
+        });
+  
+        resolve(esValido);
+      }).catch(function (error) {
+        reject(error);
+      });
+    });
+  }
+  
+
+
+
+//RECUPERAR GRUPOS
+  function recuperarGrupos() {
+    return new Promise(function(resolve, reject) {
+      axios.get('../Conexion/nombreGrupos.php')
+        .then(function(response) {
+          var datos = response.data;
+          resolve(datos);
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+    });
+  }
+  
+
+
+//ENVIO DE FORMULARIO EN AJAX
+  function enviarFormularioAJAX(form){
+
+    var xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = function() {
+
+    if (xhr.readyState === 4 && xhr.status === 200) {
+
+      console.log(xhr.responseText);
+
+      localStorage.setItem("grupo", xhr.responseText);
+
+      console.log("GRUPO: " + localStorage.getItem("grupo"));
+      
+      window.location.reload();
+
+
+    }
+  };
+
+
+  xhr.open('POST', '../Conexion/ingresarGrupo.php', true);
+
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+  var formData = new FormData(form);
+  var data = new URLSearchParams(formData).toString();
+
+  xhr.send(data);
+
+  }
+
+//VALIDACION DE FORMULARIO DE INGRESO
+  function siExiste(){
+
+    var grupo = document.getElementById("idGrupo").value;
+    console.log(grupo + "  AQUI ESTA EL GRUPO");
+
+    return new Promise(function (resolve, reject) {
+      recuperarGrupos().then(function (gruposExistentes) {
+        var existe = 'Aun no existe';
+  
+        gruposExistentes.forEach(function (element) {
+          console.log(element['NOMBRE_GRUPO']);
+  
+          if (element['NOMBRE_GRUPO'] === grupo) {
+            existe = grupo;
+          }
+        });
+  
+        resolve(existe);
+      }).catch(function (error) {
+        reject(error);
+      });
+    });
+
+  }
+
+  formularioIngreso.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    siExiste().then(function (grupo) {
+
+      if (grupo != 'Aun no existe') {
+
+        console.log("SI EXISTO");
+
+      localStorage.setItem("grupo", grupo);
+      window.location.reload();
+
+
+      } else {
+        console.log("NO EXISTO");
+
+      }
+    }).catch(function (error) {
+      console.log(error + " AQUI ES EL ERROR");
+    });
   });
 
 
